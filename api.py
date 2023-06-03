@@ -16,7 +16,12 @@ CORS(app, origins='*')
 def add_feeders():
     data = request.json
     print(data)
-    collection.insert_one(data)
+    filter = {"serial": data["serial"]}
+    feeder = collection.find_one(filter)
+    if feeder:
+        collection.update_one(filter, {'$set': data})
+    else:
+        collection.insert_one(data)
     return "received"
 
 
