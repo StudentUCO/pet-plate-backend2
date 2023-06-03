@@ -34,22 +34,29 @@ def get_time_now(data):
 
 
 # El parametro schedule debe tener un formato HH:MM, y debe ser un formato de 24 horas
-def is_time_to_feed(schedule):
-    return get_time_now(consume_api(url)) == schedule
+def is_time_to_feed(scheduleList):
+    portionToFeed = 0
+    for schedule in scheduleList:
+        if (get_time_now(consume_api(url)) == schedule["time"]):
+            portionToFeed = schedule["portion"]
+            break
+    return portionToFeed
 
 
 # Este método se utiliza para consultar el horario que se tiene definido en el alimentador para "alimentar"
 def get_schedule_from_feeder(serial):
     feeder = collection.find_one({"serial": serial})
-    return feeder["horario"]
+    return feeder["schedule"]
 
 
 # Este método valida si se requiere "alimentar" los alimentadores que se encuentren registrados en la bd
-def validate_feeders(col):
-    for a in col:
-        if is_time_to_feed(get_schedule_from_feeder(a["serial"])):
-            cli.publish("feed", str(a["cantidad"]))  # a["cantidad"]
-            print("El alimentador con serial", a["serial"], " acaba de llenarse con", a["cantidad"])
+def validate_feeders(feederList):
+    for feeder in feederList:
+        portionToFeed = is_time_to_feed(feeder["schedules"])
+        if portionToFeed > 0:
+            topic = "feed/" + str(feeder["serial"])
+            cli.publish(topic, str(portionToFeed))
+            print("El alimentador con serial", feeder["serial"], " acaba de llenarse con", portionToFeed)
         else:
             print("Todavía hay alimento")
 

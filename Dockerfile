@@ -6,6 +6,6 @@ COPY . .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-#CMD [ "python", "api.py" ]
+CMD [ "python", "api.py" ]
 CMD [ "python", "pub.py" ]
 CMD [ "python", "sub.py" ]

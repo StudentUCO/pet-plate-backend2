@@ -3,9 +3,9 @@ import requests
 import json
 from pymongo import MongoClient
 
-url_chat_bot = "http://35.169.9.170:3030/send_alarm"
-url_be_1 = "http://35.169.9.170:8080/api/user/public/get-by-feeder/"
-mongo_uri = 'mongodb://IOTUCO:LifeIsIoT@35.169.9.170:27017/?authMechanism=DEFAULT'
+url_chat_bot = "http://192.168.1.7:3030/send_alarm"
+url_be_1 = "http://192.168.1.5:8080/api/user/public/get-by-feeder/"
+mongo_uri = 'mongodb://IOTUCO:LifeIsIoT@192.168.1.3:27017/?authMechanism=DEFAULT'
 client = mqtt.Client()
 username = "argfonaa"
 password = "1Ec9pVVoAPpK"
