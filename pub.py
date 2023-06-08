@@ -1,17 +1,19 @@
 import time
 import paho.mqtt.client as mqtt
 import requests
+import signal
+import sys
 from pymongo import MongoClient
 
+# Configuración del cliente MQTT
 username = "argfonaa"
 password = "1Ec9pVVoAPpK"
-
 cli = mqtt.Client()
 cli.username_pw_set(username, password)
-cli.connect("3.83.156.245", 18582)
 
 url = "http://worldtimeapi.org/api/timezone/America/Bogota"
 
+# Configuración MongoDB
 mongo_uri = 'mongodb://IOTUCO:LifeIsIoT@35.169.9.170:27017/?authMechanism=DEFAULT'
 mClient = MongoClient(mongo_uri)
 
@@ -60,8 +62,43 @@ def validate_feeders(feederList):
         else:
             print("Todavía hay alimento")
 
+def disconnect(signal, frame):
+    print("Desconectando del broker MQTT...")
+    cli.loop_stop()  # Detener el bucle de eventos MQTT
+    cli.disconnect()
+    sys.exit(0)
+
+# Asignar el manejador de señal para Ctrl+C
+signal.signal(signal.SIGINT, disconnect)
+
+# Función para manejar el evento de conexión
+def on_connect(client, userdata, flags, rc):
+    if rc == 0:
+        print("Conexión exitosa al broker MQTT")
+    else:
+        print("Error de conexión. Código de resultado: " + str(rc))
+
+# Asignar la función de conexión
+cli.on_connect = on_connect
+
+# Conexión al broker MQTT
+cli.connect("3.83.156.245", 18582)
+cli.loop_start() # Iniciar el bucle de eventos MQTT
+
+# Función para manejar el evento de pérdida de conexión
+def on_disconnect(client, userdata, rc):
+    print("Conexión perdida con el broker MQTT. Intentando reconexión...")
+    while rc != 0:
+        try:
+            time.sleep(1)  # Esperar 1 segundo antes de intentar la reconexión
+            rc = cli.reconnect()  # Intentar reconexión al broker MQTT
+        except:
+            continue
+
+# Asignar la función de pérdida de conexión
+cli.on_disconnect = on_disconnect
 
 while True:
     data = consume_api(url)
     validate_feeders(collection.find())
-    time.sleep(20)
+    time.sleep(60)
