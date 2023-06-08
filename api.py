@@ -19,7 +19,10 @@ def add_feeders():
     filter = {"serial": data["serial"]}
     feeder = collection.find_one(filter)
     if feeder:
-        collection.update_one(filter, {'$set': data})
+        if len(data["schedules"]) > 0:
+            collection.update_one(filter, {'$set': data})
+        else:
+            collection.delete_one(filter)
     else:
         collection.insert_one(data)
     return "received"
