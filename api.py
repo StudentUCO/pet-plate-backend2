@@ -1,8 +1,9 @@
 from flask import Flask, request
 from flask_cors import CORS
 from pymongo import MongoClient
+from environment import config_aws as config
 
-mongo_uri = 'mongodb://IOTUCO:LifeIsIoT@35.169.9.170:27017/?authMechanism=DEFAULT'
+mongo_uri = config.MONGO_URI
 mClient = MongoClient(mongo_uri)
 
 db = mClient['BE2']
@@ -29,4 +30,4 @@ def add_feeders():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=4000, host='localhost')
+    app.run(debug=True, port=config.PORT, host=config.IP)

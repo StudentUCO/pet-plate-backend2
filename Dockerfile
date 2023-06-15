@@ -2,10 +2,8 @@ FROM python:3.11-alpine
 
 WORKDIR /app
 
-COPY . .
+COPY . /app
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-CMD [ "python", "api.py" ]
-CMD [ "python", "pub.py" ]
-CMD [ "python", "sub.py" ]
+CMD [ "sh", "-c", "python api.py & python pub.py & python sub.py" ]

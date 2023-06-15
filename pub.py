@@ -4,17 +4,18 @@ import requests
 import signal
 import sys
 from pymongo import MongoClient
+from environment import config_aws as config
 
 # Configuración del cliente MQTT
-username = "argfonaa"
-password = "1Ec9pVVoAPpK"
+username = config.MQTT_USERNAME
+password = config.MQTT_PASSWORD
 cli = mqtt.Client()
 cli.username_pw_set(username, password)
 
 url = "http://worldtimeapi.org/api/timezone/America/Bogota"
 
 # Configuración MongoDB
-mongo_uri = 'mongodb://IOTUCO:LifeIsIoT@35.169.9.170:27017/?authMechanism=DEFAULT'
+mongo_uri = config.MONGO_URI
 mClient = MongoClient(mongo_uri)
 
 db = mClient['BE2']
