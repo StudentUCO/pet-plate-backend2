@@ -4,7 +4,7 @@ import paho.mqtt.client as mqtt
 import requests
 import json
 from pymongo import MongoClient
-from environment import config_aws as config
+from environment import config_dev as config
 
 url_chat_bot = "http://" + config.CHATBOT_IP + ":" + str(config.CHATBOT_PORT)
 url_be_1 = "http://" + config.BACKEND1_IP + ":" + str(config.BACKEND1_PORT) + "/api/user/public/get-by-feeder/"

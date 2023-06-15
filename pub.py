@@ -4,7 +4,7 @@ import requests
 import signal
 import sys
 from pymongo import MongoClient
-from environment import config_aws as config
+from environment import config_dev as config
 
 # Configuración del cliente MQTT
 username = config.MQTT_USERNAME

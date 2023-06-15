@@ -1,7 +1,7 @@
 from flask import Flask, request
 from flask_cors import CORS
 from pymongo import MongoClient
-from environment import config_aws as config
+from environment import config_dev as config
 
 mongo_uri = config.MONGO_URI
 mClient = MongoClient(mongo_uri)
